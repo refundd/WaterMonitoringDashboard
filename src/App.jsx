@@ -10,10 +10,13 @@ import './App.css';
 
 import { LanguageProvider } from './contexts/LanguageContext';
 
+import { Menu, X } from 'lucide-react';
+
 function App() {
     // ... existing state ...
     const [nodes, setNodes] = useState([]);
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
     useEffect(() => {
         document.body.className = `theme-${theme}`;
@@ -35,7 +38,26 @@ function App() {
         <LanguageProvider>
             <HashRouter>
                 <div className="app-container">
-                    <Sidebar nodes={nodes} theme={theme} toggleTheme={toggleTheme} />
+                    <header className="mobile-header">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-primary)' }}>
+                            WaterMon
+                        </div>
+                        <button
+                            className="mobile-menu-btn"
+                            onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+                        >
+                            {isMobileSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
+                    </header>
+
+                    <Sidebar
+                        nodes={nodes}
+                        theme={theme}
+                        toggleTheme={toggleTheme}
+                        isOpen={isMobileSidebarOpen}
+                        onClose={() => setIsMobileSidebarOpen(false)}
+                    />
+
                     <main className="main-content">
                         <Routes>
                             <Route path="/" element={<Dashboard nodes={nodes} />} />

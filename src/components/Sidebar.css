@@ -153,6 +153,45 @@ body.theme-light .status-dot.online {
     font-weight: 600;
 }
 
+/* Mobile Sidebar Overrides */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        /* Slightly wider for touch */
+        max-width: 80vw;
+        box-shadow: none;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Overlay */
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 45;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s;
+    }
+
+    .sidebar-overlay.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Adjust nav items for touch */
+    .nav-item {
+        padding: 1rem;
+        /* Larger touch target */
+    }
+}
+
 .theme-toggle:hover {
     background: rgba(59, 130, 246, 0.1);
     color: var(--text-primary);
