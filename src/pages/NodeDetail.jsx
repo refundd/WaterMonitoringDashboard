@@ -16,7 +16,8 @@ const NodeDetail = ({ nodes }) => {
     const [timeRange, setTimeRange] = useState('10m');
     const { t } = useLanguage();
 
-    // ... find node
+    // Find node
+    const node = nodes.find(n => n.id === id);
 
     // Rename state
     const [isEditing, setIsEditing] = useState(false);
@@ -28,7 +29,30 @@ const NodeDetail = ({ nodes }) => {
 
     if (!node) return <Navigate to="/" />;
 
-    // ... handlers
+    const handleSaveName = () => {
+        if (newName.trim()) {
+            updateNodeMeta(node.id, { name: newName });
+            setIsEditing(false);
+        }
+    };
+
+    // Transform history for charts
+    const history = node.history || [];
+    const getFilteredHistory = () => {
+        if (!history.length) return [];
+        const now = new Date();
+        let minutesToKeep = 10;
+        if (timeRange === '1h') minutesToKeep = 60;
+        if (timeRange === '24h') minutesToKeep = 1440;
+        const cutoff = new Date(now.getTime() - minutesToKeep * 60000);
+        return history.filter(h => new Date(h.timestamp) > cutoff);
+    };
+    const filteredHistory = getFilteredHistory();
+    const getHistory = (path) => filteredHistory.map(h => {
+        if (!path.includes('.')) return { timestamp: h.timestamp, value: h[path] };
+        const [cat, key] = path.split('.');
+        return { timestamp: h.timestamp, value: h[cat][key] };
+    });
 
     const handleDelete = () => {
         if (window.confirm(t('nodeDetail.confirmDelete'))) {

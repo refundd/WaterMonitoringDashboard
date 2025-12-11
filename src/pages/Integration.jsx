@@ -7,9 +7,89 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const Integration = () => {
     const { t } = useLanguage();
-    // ... hooks
+    const [apiKey, setApiKey] = useState('');
+    const [copied, setCopied] = useState(false);
 
-    // ... existing handlers
+    const defaultPayload = {
+        "deduplicationId": "uuid-1234",
+        "time": new Date().toISOString(),
+        "deviceInfo": {
+            "deviceName": "ChirpStack-Node-01",
+            "devEui": "a92fa271e4c6b107"
+        },
+        "object": {
+            "ph": 7.4,
+            "turbidity": 3.2,
+            "temperature": 25.5,
+            "tds": 160,
+            "do": 8.1,
+            "battery": 95
+        },
+        "rxInfo": [
+            {
+                "rssi": -55,
+                "snr": 12.5
+            }
+        ]
+    };
+
+    const [testPayload, setTestPayload] = useState(JSON.stringify(defaultPayload, null, 2));
+    const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        const storedKey = localStorage.getItem('gateway_api_key');
+        if (storedKey) {
+            setApiKey(storedKey);
+        } else {
+            generateKey();
+        }
+    }, []);
+
+    const generateKey = () => {
+        const newKey = 'sk_live_' + Array.from({ length: 24 }, () => Math.floor(Math.random() * 36).toString(36)).join('');
+        setApiKey(newKey);
+        localStorage.setItem('gateway_api_key', newKey);
+    };
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(apiKey);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    const handleSendPacket = () => {
+        try {
+            const payload = JSON.parse(testPayload);
+            // Auto update timestamp to now for realism
+            payload.timestamp = new Date().toISOString();
+            setTestPayload(JSON.stringify(payload, null, 2));
+
+            const result = processIncomingPacket(payload);
+            setMessage(result.message);
+
+            if (result.success) {
+                setTimeout(() => setMessage(''), 3000);
+            }
+        } catch (e) {
+            setMessage('Error: Invalid JSON');
+        }
+    };
+
+    const payloadExample = {
+        "deduplicationId": "...",
+        "time": "2024-12-10T10:30:00Z",
+        "deviceInfo": {
+            "deviceName": "My-Sensor-1",
+        },
+        "object": {
+            "ph": 7.2,
+            "turbidity": 4.5,
+            "temperature": 26.1,
+            "tds": 145,
+            "do": 8.4
+        },
+        "rxInfo": [{ "rssi": -85, "snr": 8 }]
+    };
 
     return (
         <div className="integration-page">

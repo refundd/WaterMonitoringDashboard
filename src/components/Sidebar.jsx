@@ -9,7 +9,29 @@ import { useLanguage } from '../contexts/LanguageContext';
 const Sidebar = ({ nodes, theme, toggleTheme }) => {
     const [isReordering, setIsReordering] = useState(false);
     const { t, language, toggleLanguage } = useLanguage();
-    // ... move handlers
+    const handleMove = (node, direction) => {
+        const index = nodes.findIndex(n => n.id === node.id);
+        if (index === -1) return;
+
+        let newOrder = [...nodes];
+        // simple swap logic by index since nodes are already sorted
+        if (direction === 'up' && index > 0) {
+            const temp = newOrder[index - 1];
+            newOrder[index - 1] = newOrder[index];
+            newOrder[index] = temp;
+        } else if (direction === 'down' && index < newOrder.length - 1) {
+            const temp = newOrder[index + 1];
+            newOrder[index + 1] = newOrder[index];
+            newOrder[index] = temp;
+        } else {
+            return;
+        }
+
+        // Actually, just batch update order property based on new index
+        newOrder.forEach((n, idx) => {
+            updateNodeMeta(n.id, { order: idx });
+        });
+    };
 
     return (
         <aside className="sidebar">
