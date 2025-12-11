@@ -6,7 +6,7 @@ const Info = () => {
         <div className="info-page">
             <div className="info-card">
                 <div className="logo-container">
-                    <img src="/telkom-logo.png" alt="Telkom University Logo" className="uni-logo" />
+                    <img src={`${import.meta.env.BASE_URL}telkom-logo.png`} alt="Telkom University Logo" className="uni-logo" />
                 </div>
 
                 <h1 className="student-name">Mohamad Rifan Kasyiful Asrar</h1>
