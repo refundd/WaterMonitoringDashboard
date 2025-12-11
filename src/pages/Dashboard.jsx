@@ -4,12 +4,18 @@ import { Activity, Signal, Droplets, Thermometer, Wifi } from 'lucide-react';
 import BatteryGauge from '../components/BatteryGauge';
 import './Dashboard.css';
 
+import { useLanguage } from '../contexts/LanguageContext';
+
 const Dashboard = ({ nodes }) => {
+    const { t } = useLanguage();
+
     return (
         <div className="dashboard-page">
             <header className="page-header">
-                <h1>Overview</h1>
-                <p className="text-muted">Monitoring {nodes.length} Active Nodes • Network Health: Excellent</p>
+                <h1>{t('dashboard.header')}</h1>
+                <p className="text-muted">
+                    Monitoring {nodes.length} {t('dashboard.activeNodes')} • {t('dashboard.networkHealth')}: Excellent
+                </p>
             </header>
 
             <div className="nodes-grid">
@@ -19,20 +25,22 @@ const Dashboard = ({ nodes }) => {
                             <h3>{node.name}</h3>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                 <BatteryGauge level={node.battery} />
-                                <span className="status-badge">{node.status}</span>
+                                <span className="status-badge">
+                                    {node.status === 'online' ? t('dashboard.online') : t('dashboard.offline')}
+                                </span>
                             </div>
                         </div>
 
                         <div className="card-body">
                             <div className="metric-row">
                                 <div className="metric">
-                                    <span className="label">Signal Quality</span>
+                                    <span className="label">{t('dashboard.signalQuality')}</span>
                                     <span className="value" style={{ color: node.connection.rssi > -100 ? 'var(--color-success)' : 'var(--color-error)' }}>
                                         {node.connection.rssi} dBm
                                     </span>
                                 </div>
                                 <div className="metric">
-                                    <span className="label">Packet Loss</span>
+                                    <span className="label">{t('dashboard.packetLoss')}</span>
                                     <span className="value">{(100 - node.connection.pdr).toFixed(1)}%</span>
                                 </div>
                             </div>

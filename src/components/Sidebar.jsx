@@ -4,56 +4,36 @@ import { LayoutDashboard, Radio, Sun, Moon, Server, Settings, ChevronUp, Chevron
 import { updateNodeMeta } from '../services/mockData';
 import './Sidebar.css';
 
+import { useLanguage } from '../contexts/LanguageContext';
+
 const Sidebar = ({ nodes, theme, toggleTheme }) => {
     const [isReordering, setIsReordering] = useState(false);
-
-    const handleMove = (node, direction) => {
-        const index = nodes.findIndex(n => n.id === node.id);
-        if (index === -1) return;
-
-        let newOrder = [...nodes];
-        // simple swap logic by index since nodes are already sorted
-        if (direction === 'up' && index > 0) {
-            const temp = newOrder[index - 1];
-            newOrder[index - 1] = newOrder[index];
-            newOrder[index] = temp;
-        } else if (direction === 'down' && index < newOrder.length - 1) {
-            const temp = newOrder[index + 1];
-            newOrder[index + 1] = newOrder[index];
-            newOrder[index] = temp;
-        } else {
-            return;
-        }
-
-        // Actually, just batch update order property based on new index
-        newOrder.forEach((n, idx) => {
-            updateNodeMeta(n.id, { order: idx });
-        });
-    };
+    const { t, language, toggleLanguage } = useLanguage();
+    // ... move handlers
 
     return (
         <aside className="sidebar">
             <div className="sidebar-header">
                 <Radio size={28} className="logo-icon" />
-                <h2>WaterMon</h2>
+                <h2>{t('sidebar.title')}</h2>
             </div>
 
             <nav className="sidebar-nav">
                 <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <LayoutDashboard size={20} />
-                    <span>Overview</span>
+                    <span>{t('sidebar.overview')}</span>
                 </NavLink>
                 <NavLink to="/integration" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <Server size={20} />
-                    <span>Integration</span>
+                    <span>{t('sidebar.integration')}</span>
                 </NavLink>
                 <NavLink to="/info" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <InfoIcon size={20} />
-                    <span>Info</span>
+                    <span>{t('sidebar.info')}</span>
                 </NavLink>
 
                 <div className="nav-section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span>Nodes</span>
+                    <span>{t('sidebar.nodes')}</span>
                     <button
                         onClick={() => setIsReordering(!isReordering)}
                         className="icon-btn-small"
@@ -87,13 +67,20 @@ const Sidebar = ({ nodes, theme, toggleTheme }) => {
                 ))}
             </nav>
 
-            <div style={{ padding: '1rem', borderTop: '1px solid var(--sidebar-border)' }}>
+            <div style={{ padding: '1rem', borderTop: '1px solid var(--sidebar-border)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <button
+                    onClick={toggleLanguage}
+                    className="theme-toggle"
+                >
+                    <span style={{ fontSize: '1.2rem', marginRight: '0.5rem' }}>{language === 'en' ? '🇬🇧' : '🇮🇩'}</span>
+                    <span>{language === 'en' ? 'English' : 'Indonesia'}</span>
+                </button>
                 <button
                     onClick={toggleTheme}
                     className="theme-toggle"
                 >
                     {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-                    <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                    <span>{theme === 'dark' ? t('sidebar.lightMode') : t('sidebar.darkMode')}</span>
                 </button>
             </div>
         </aside>

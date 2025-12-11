@@ -8,7 +8,10 @@ import Info from './pages/Info'; // Import Info page
 import { subscribeToNodes, getNodes } from './services/mockData';
 import './App.css';
 
+import { LanguageProvider } from './contexts/LanguageContext';
+
 function App() {
+    // ... existing state ...
     const [nodes, setNodes] = useState([]);
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
 
@@ -29,19 +32,21 @@ function App() {
     }, []);
 
     return (
-        <HashRouter>
-            <div className="app-container">
-                <Sidebar nodes={nodes} theme={theme} toggleTheme={toggleTheme} />
-                <main className="main-content">
-                    <Routes>
-                        <Route path="/" element={<Dashboard nodes={nodes} />} />
-                        <Route path="/node/:id" element={<NodeDetail nodes={nodes} />} />
-                        <Route path="/integration" element={<Integration />} />
-                        <Route path="/info" element={<Info />} />
-                    </Routes>
-                </main>
-            </div>
-        </HashRouter>
+        <LanguageProvider>
+            <HashRouter>
+                <div className="app-container">
+                    <Sidebar nodes={nodes} theme={theme} toggleTheme={toggleTheme} />
+                    <main className="main-content">
+                        <Routes>
+                            <Route path="/" element={<Dashboard nodes={nodes} />} />
+                            <Route path="/node/:id" element={<NodeDetail nodes={nodes} />} />
+                            <Route path="/integration" element={<Integration />} />
+                            <Route path="/info" element={<Info />} />
+                        </Routes>
+                    </main>
+                </div>
+            </HashRouter>
+        </LanguageProvider>
     );
 }
 export default App;
