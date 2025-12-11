@@ -1,0 +1,15 @@
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    margin-left: 260px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background: transparent;
+    /* Let body gradient show */
+}
