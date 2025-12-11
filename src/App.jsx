@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import NodeDetail from './pages/NodeDetail';
@@ -29,7 +29,7 @@ function App() {
     }, []);
 
     return (
-        <BrowserRouter>
+        <HashRouter>
             <div className="app-container">
                 <Sidebar nodes={nodes} theme={theme} toggleTheme={toggleTheme} />
                 <main className="main-content">
@@ -41,7 +41,7 @@ function App() {
                     </Routes>
                 </main>
             </div>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 export default App;
