@@ -156,16 +156,20 @@ body.theme-light .status-dot.online {
 /* Mobile Sidebar Overrides */
 @media (max-width: 768px) {
     .sidebar {
-        transform: translateX(-100%);
+        left: auto;
+        right: 0;
+        transform: translateX(100%);
         width: 280px;
         /* Slightly wider for touch */
         max-width: 80vw;
         box-shadow: none;
+        border-right: none;
+        border-left: 1px solid var(--sidebar-border);
     }
 
     .sidebar.open {
         transform: translateX(0);
-        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
     }
 
     /* Overlay */
